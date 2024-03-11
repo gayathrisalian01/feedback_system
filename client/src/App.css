@@ -1,0 +1,40 @@
+.feedback-container {
+  padding: 20px;
+}
+
+.add-feedback-container {
+  margin-bottom: 20px;
+}
+
+.feedback-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.feedback-item {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.feedback-text {
+  
+  font-size: 20px;
+}
+
+.feedback-info {
+  margin-right: 10px;
+  font-weight: bold;
+}
+
+.feedback-buttons {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 10px;
+
+}
+
+.feedback-buttons button {
+  margin-left: 10px;
+}
