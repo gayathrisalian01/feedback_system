@@ -35,11 +35,13 @@ function App() {
     });
     socket.on('newFeedback', (feedback) => {
       setFeedbacks((prevFeedbacks) => [...prevFeedbacks, feedback]);
+      fetchInitialCount();
   });
 
   socket.on('feedbackDeleted', ({ id }) => {
       setFeedbacks((prevFeedbacks) => prevFeedbacks.filter((feedback) => feedback._id !== id));
-   
+      fetchInitialCount();
+    
   });
  
   
@@ -106,6 +108,7 @@ useEffect(() => {
       .then(data => {
         console.log('Feedback liked successfully:', data);
         fetchFeedbacks();
+        
       })
       .catch(error => console.error('Error liking feedback:', error));
   };
