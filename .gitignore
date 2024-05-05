@@ -1,0 +1,49 @@
+# Node.js specific
+node_modules/
+npm-debug.log
+yarn-error.log
+.pnp
+.pnp.js
+
+# WebStorm files
+.idea/
+
+# macOS
+.DS_Store
+
+# Editor specific
+.vscode/
+
+# React specific
+/build/
+/.cache/
+npm-debug.log*
+
+# Log files
+*.log
+
+# Dependency directories
+/jspm_packages/
+/bower_components/
+
+# Environment variables
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Ignore compiled output
+dist/
+
+# Ignore node_modules in the client directory
+client/node_modules/
+
+# Ignore build output in the server directory
+server/build/
+
+# Ignore .env file for local environment variables
+.env

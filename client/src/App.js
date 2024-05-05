@@ -11,11 +11,28 @@ function App() {
   const [newFeedback, setNewFeedback] = useState('');
   const [count, setCount] = useState(0);
   const [shouldDisconnect, setShouldDisconnect] = useState(true);
-
+ 
   
   useEffect(() => {
     fetchFeedbacks();
-    getCount();
+    socket.emit('getCount'); 
+
+    const fetchInitialCount = async () => {
+      try {
+        const response = await fetch('http://localhost:3001/api/feedback/count');
+        const data = await response.json();
+        setCount(data.count);
+      } catch (error) {
+        console.error('Error fetching initial count:', error);
+      }
+    };
+
+    fetchInitialCount();
+
+    socket.on('countUpdate', (count) => {
+      setCount(count);
+      console.log('Received count update:', count); 
+    });
     socket.on('newFeedback', (feedback) => {
       setFeedbacks((prevFeedbacks) => [...prevFeedbacks, feedback]);
   });
@@ -24,9 +41,11 @@ function App() {
       setFeedbacks((prevFeedbacks) => prevFeedbacks.filter((feedback) => feedback._id !== id));
    
   });
-
+ 
+  
   socket.on('countUpdate', (count) => {
     setCount(count); 
+    console.log(count);
 });
 
 if (shouldDisconnect) {
@@ -48,9 +67,7 @@ useEffect(() => {
       window.removeEventListener('beforeunload', handleBeforeUnload);
   };
 }, [shouldDisconnect]);
-const getCount = () => {
-  socket.emit('getCount'); 
-};
+
 
   const fetchFeedbacks = () => {
     fetch('http://localhost:3001/api/feedback')
@@ -74,7 +91,7 @@ const getCount = () => {
           })
             .then(response => response.json())
             .then(data => {
-              // Feedback will be received via socket and updated in the state
+              
               setNewFeedback('');
             })
             .catch(error => console.error('Error adding feedback:', error));
@@ -131,6 +148,7 @@ const getCount = () => {
                 onChange={(e) => setNewFeedback(e.target.value)}
               />
               <h3>Total Number of Feedbacks</h3>
+           
               <h2>{count}</h2>
               <Button variant="primary" onClick={handleAddFeedback}>
                 Add Feedback

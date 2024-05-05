@@ -6,7 +6,7 @@ const cors = require('cors');
 const app = express();
 const server = http.createServer(app);
 const io = socketIo(server);
-
+app.use(cors({ origin: 'http://localhost:3000' }));
 mongoose.connect('mongodb://0.0.0.0:27017/feedback-db');
 
 const feedbackSchema = new mongoose.Schema({
@@ -16,18 +16,26 @@ const feedbackSchema = new mongoose.Schema({
 });
 
 const Feedback = mongoose.model('Feedback', feedbackSchema);
-app.use(cors());
 app.use(express.json());
 
 const updateCount = async () => {
     try {
         const count = await Feedback.countDocuments();
+        console.log(count);
         return count;
     } catch (error) {
         console.error(error);
         throw error;
     }
 };
+app.get('/api/feedback/count', async (req, res) => {
+    try {
+      const count = await updateCount();
+      res.json({ count }); 
+    } catch (error) {
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  });
 
 app.get('/api/feedback', async (req, res) => {
     try {
@@ -126,7 +134,6 @@ io.on('connection', (socket) => {
     });
     socket.on('disconnect', () => {
         console.log('A user disconnected');
-        // Additional cleanup logic if needed
     });
 });
 
@@ -138,6 +145,7 @@ server.listen(PORT, async () => {
     try {
         const count = await updateCount();
         io.emit('countUpdate', count);
+        console.log(count);
     } catch (error) {
         console.error('Error emitting count on server start:', error);
     }
